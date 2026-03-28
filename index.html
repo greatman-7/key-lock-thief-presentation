@@ -1,0 +1,1868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Key, The Lock & The Thief | GMT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Core Dark Palette */
+            --bg-primary: #020617;
+            --bg-secondary: #0f172a;
+            --bg-tertiary: #1e293b;
+            --bg-card: rgba(30, 41, 59, 0.6);
+            
+            /* Text */
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --text-subtle: #475569;
+            
+            /* Accents - More Vibrant */
+            --accent-gold: #fbbf24;
+            --accent-crimson: #ef4444;
+            --accent-emerald: #34d399;
+            --accent-sapphire: #60a5fa;
+            --accent-purple: #a78bfa;
+            
+            /* Gradients */
+            --gradient-dark: radial-gradient(ellipse at top, #1e293b 0%, #020617 100%);
+            --gradient-thief: radial-gradient(ellipse at center, #450a0a 0%, #020617 100%);
+            --gradient-hope: radial-gradient(ellipse at bottom, #064e3b 0%, #020617 100%);
+            --gradient-divine: radial-gradient(ellipse at top, #fbbf24 0%, #020617 60%);
+            
+            /* Effects */
+            --shadow-soft: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+            --shadow-glow-gold: 0 0 60px rgba(251, 191, 36, 0.3);
+            --shadow-glow-crimson: 0 0 60px rgba(239, 68, 68, 0.3);
+            --shadow-glow-emerald: 0 0 60px rgba(52, 211, 153, 0.3);
+            
+            --glass: rgba(30, 41, 59, 0.4);
+            --border-subtle: rgba(255, 255, 255, 0.08);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html, body { 
+            height: 100%; 
+            overflow: hidden; 
+            font-family: 'Inter', sans-serif; 
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        /* Particle Canvas Background */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+        
+        /* Ambient Light Effects */
+        .ambient-light {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 1;
+            transition: all 1s ease;
+        }
+        
+        .ambient-light.gold {
+            background: radial-gradient(circle, var(--accent-gold) 0%, transparent 70%);
+            top: -200px;
+            right: -200px;
+        }
+        
+        .ambient-light.crimson {
+            background: radial-gradient(circle, var(--accent-crimson) 0%, transparent 70%);
+            bottom: -200px;
+            left: -200px;
+        }
+        
+        .ambient-light.emerald {
+            background: radial-gradient(circle, var(--accent-emerald) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        /* Main Container */
+        .reveal { 
+            height: 100vh; 
+            width: 100vw; 
+            position: relative;
+            z-index: 2;
+        }
+        
+        .slides { 
+            height: 100%; 
+            width: 100%; 
+            position: relative; 
+            overflow: hidden;
+            background: var(--gradient-dark);
+            transition: background 1s ease;
+        }
+        
+        .slides.theme-thief {
+            background: var(--gradient-thief);
+        }
+        
+        .slides.theme-hope {
+            background: var(--gradient-hope);
+        }
+        
+        .slides.theme-divine {
+            background: var(--gradient-divine);
+        }
+        
+        /* Slide Sections */
+        section { 
+            position: absolute; 
+            height: 100%; 
+            width: 100%; 
+            padding: 4rem 6rem; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            opacity: 0; 
+            visibility: hidden; 
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+                        transform 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+                        filter 0.8s ease; 
+            transform: translateY(40px) scale(0.96); 
+            filter: blur(10px);
+            overflow-y: auto;
+        }
+        
+        section.active { 
+            opacity: 1; 
+            visibility: visible; 
+            transform: translateY(0) scale(1); 
+            filter: blur(0);
+            z-index: 10; 
+        }
+        
+        /* Typography - Enhanced */
+       h1 { 
+    font-family: 'Cormorant Garamond', serif; 
+    font-size: clamp(3.5rem, 7vw, 6rem); 
+    font-weight: 300; 
+    line-height: 1.0; 
+    margin-bottom: 1.5rem; 
+    text-align: center; 
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, #fff 0%, var(--accent-gold) 50%, #fff 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;  /* ← STANDARD PROPERTY ADDED */
+    animation: shine 8s linear infinite;
+    text-shadow: 0 0 80px rgba(251, 191, 36, 0.3);
+}
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+        
+        h2 { 
+            font-family: 'Cormorant Garamond', serif; 
+            font-size: clamp(2.2rem, 4.5vw, 3.5rem); 
+            font-weight: 400; 
+            margin-bottom: 3rem; 
+            color: var(--text-primary);
+            text-align: center;
+            position: relative;
+            letter-spacing: -0.02em;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+        }
+        
+        h3 { 
+            font-family: 'Cormorant Garamond', serif; 
+            font-size: clamp(1.5rem, 2.5vw, 2rem); 
+            font-weight: 600; 
+            margin: 0 0 1rem; 
+            color: var(--accent-gold);
+            letter-spacing: -0.01em;
+        }
+        
+        p, li { 
+            font-size: clamp(1.05rem, 1.6vw, 1.3rem); 
+            line-height: 1.9; 
+            color: var(--text-secondary); 
+            max-width: 850px; 
+            margin-bottom: 1.2rem;
+            font-weight: 300;
+        }
+        
+        /* Reveal Text Animation */
+        .reveal-text {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: revealUp 0.8s ease forwards;
+        }
+        
+        .reveal-text.delay-1 { animation-delay: 0.2s; }
+        .reveal-text.delay-2 { animation-delay: 0.4s; }
+        .reveal-text.delay-3 { animation-delay: 0.6s; }
+        .reveal-text.delay-4 { animation-delay: 0.8s; }
+        
+        @keyframes revealUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Scripture Typing Effect */
+        .typewriter {
+            overflow: hidden;
+            border-right: 2px solid var(--accent-gold);
+            white-space: nowrap;
+            animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
+            max-width: fit-content;
+            margin: 0 auto;
+        }
+        
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--accent-gold); }
+        }
+        
+        ul, ol { 
+            margin: 2rem 0; 
+            padding-left: 0;
+            list-style: none;
+        }
+        
+        li { 
+            margin-bottom: 1.2rem; 
+            color: var(--text-secondary);
+            position: relative;
+            padding-left: 2rem;
+        }
+        
+        li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--accent-gold);
+            font-weight: 600;
+        }
+        
+        /* Category Tag - Pill Style */
+        .category-tag { 
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(251, 191, 36, 0.1);
+            color: var(--accent-gold); 
+            padding: 0.8rem 1.8rem; 
+            border-radius: 50px; 
+            font-size: 0.8rem; 
+            font-weight: 600; 
+            text-transform: uppercase; 
+            letter-spacing: 0.15em; 
+            margin-bottom: 2.5rem;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 0 30px rgba(251, 191, 36, 0.1);
+            opacity: 0;
+            animation: fadeIn 1s ease 0.5s forwards;
+        }
+        
+        .category-tag::before {
+            content: '◆';
+            font-size: 0.6rem;
+        }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        
+        .subtitle { 
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.4rem, 2.5vw, 1.9rem); 
+            color: var(--text-secondary); 
+            text-align: center; 
+            max-width: 700px; 
+            margin-bottom: 2.5rem; 
+            font-weight: 300;
+            font-style: italic;
+            opacity: 0;
+            animation: revealUp 1s ease 0.7s forwards;
+        }
+        
+        .meta { 
+            display: flex; 
+            gap: 1.5rem; 
+            color: var(--text-muted); 
+            font-size: 0.9rem; 
+            margin-top: 1.5rem;
+            align-items: center;
+            opacity: 0;
+            animation: revealUp 1s ease 0.9s forwards;
+        }
+        
+        .author { 
+            font-weight: 600; 
+            color: var(--accent-gold);
+        }
+        
+        /* Scripture Box - Cinematic */
+        .scripture-box { 
+            background: var(--glass); 
+            border: 1px solid var(--border-subtle);
+            border-left: 3px solid var(--accent-gold); 
+            padding: 3rem; 
+            margin: 2rem 0; 
+            border-radius: 4px 20px 20px 4px; 
+            box-shadow: var(--shadow-soft), inset 0 1px 0 rgba(255,255,255,0.05);
+            max-width: 900px; 
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all 0.6s ease;
+        }
+        
+        section.active .scripture-box {
+            opacity: 1;
+            transform: translateX(0);
+            transition-delay: 0.3s;
+        }
+        
+        .scripture-box::before {
+            content: '"';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 10rem;
+            color: rgba(251, 191, 36, 0.08);
+            line-height: 1;
+            font-weight: 300;
+        }
+        
+        .scripture-box.crimson {
+            border-left-color: var(--accent-crimson);
+        }
+        
+        .scripture-box.crimson::before {
+            color: rgba(239, 68, 68, 0.08);
+        }
+        
+        .scripture-box.emerald {
+            border-left-color: var(--accent-emerald);
+        }
+        
+        .scripture-box.emerald::before {
+            color: rgba(52, 211, 153, 0.08);
+        }
+        
+        .scripture-box p { 
+            font-family: 'Cormorant Garamond', serif; 
+            font-size: clamp(1.4rem, 2.5vw, 1.8rem); 
+            color: var(--text-primary); 
+            margin-bottom: 1.5rem; 
+            font-style: italic;
+            font-weight: 400;
+            position: relative;
+            z-index: 1;
+            line-height: 1.6;
+        }
+        
+        .scripture-box cite { 
+            display: block; 
+            color: var(--accent-gold); 
+            font-weight: 600; 
+            font-size: 0.85rem; 
+            text-transform: uppercase; 
+            letter-spacing: 0.15em; 
+            font-style: normal;
+            margin-top: 1.5rem;
+            opacity: 0.8;
+        }
+        
+        /* Highlight Boxes - Glassmorphism */
+        .highlight-box { 
+            background: var(--glass);
+            border: 1px solid var(--border-subtle);
+            padding: 2.5rem; 
+            border-radius: 20px; 
+            margin: 2rem 0; 
+            box-shadow: var(--shadow-soft);
+            max-width: 850px; 
+            width: 100%;
+            position: relative;
+            backdrop-filter: blur(20px);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+        
+        section.active .highlight-box {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .highlight-box.gold {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.08) 0%, rgba(251, 191, 36, 0.02) 100%);
+            border-color: rgba(251, 191, 36, 0.2);
+            box-shadow: var(--shadow-soft), var(--shadow-glow-gold);
+        }
+        
+        .highlight-box.crimson {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(239, 68, 68, 0.02) 100%);
+            border-color: rgba(239, 68, 68, 0.2);
+            box-shadow: var(--shadow-soft), var(--shadow-glow-crimson);
+        }
+        
+        .highlight-box.emerald {
+            background: linear-gradient(135deg, rgba(52, 211, 153, 0.08) 0%, rgba(52, 211, 153, 0.02) 100%);
+            border-color: rgba(52, 211, 153, 0.2);
+            box-shadow: var(--shadow-soft), var(--shadow-glow-emerald);
+        }
+        
+        .highlight-box h3 { 
+            color: var(--text-primary); 
+            margin-top: 0;
+            font-size: 1.6rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Two Column - Enhanced */
+        .two-col { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 2rem; 
+            max-width: 1000px; 
+            width: 100%; 
+            align-items: stretch;
+        }
+        
+        .col { 
+            background: var(--glass); 
+            padding: 2.5rem; 
+            border-radius: 20px;
+            border: 1px solid var(--border-subtle);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .col::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--accent-gold);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+        
+        .col:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-soft), 0 20px 40px rgba(0,0,0,0.4);
+            border-color: rgba(251, 191, 36, 0.2);
+        }
+        
+        .col:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .col h3 { 
+            margin-top: 0; 
+            color: var(--accent-gold);
+            font-size: 1.5rem;
+        }
+        
+        /* Discussion Questions - Interactive */
+        .discussion-q { 
+            background: var(--glass); 
+            padding: 1.8rem 2.2rem; 
+            border-radius: 16px; 
+            margin: 1.2rem 0; 
+            border-left: 3px solid var(--accent-emerald); 
+            max-width: 850px; 
+            width: 100%;
+            border: 1px solid var(--border-subtle);
+            border-left-width: 3px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        
+        section.active .discussion-q {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        section.active .discussion-q:nth-child(2) { transition-delay: 0.2s; }
+        section.active .discussion-q:nth-child(3) { transition-delay: 0.4s; }
+        section.active .discussion-q:nth-child(4) { transition-delay: 0.6s; }
+        
+        .discussion-q::after {
+            content: 'Click to reflect';
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.75rem;
+            color: var(--text-subtle);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .discussion-q:hover::after {
+            opacity: 1;
+        }
+        
+        .discussion-q:hover {
+            background: rgba(30, 41, 59, 0.8);
+            transform: translateX(10px);
+            border-color: rgba(52, 211, 153, 0.3);
+        }
+        
+        .discussion-q.active {
+            background: rgba(52, 211, 153, 0.1);
+            border-color: var(--accent-emerald);
+        }
+        
+        .discussion-q p { 
+            margin: 0; 
+            font-weight: 400; 
+            color: var(--text-primary);
+            font-size: 1.1rem;
+        }
+        
+        .discussion-label { 
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--accent-emerald); 
+            color: #000; 
+            padding: 0.4rem 1rem; 
+            border-radius: 20px; 
+            font-size: 0.7rem; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 0.1em; 
+            margin-bottom: 0.8rem;
+        }
+        
+        .discussion-label::before {
+            content: '?';
+            font-weight: 800;
+        }
+        
+        .discussion-label.gold {
+            background: var(--accent-gold);
+            color: #000;
+        }
+        
+        .discussion-label.crimson {
+            background: var(--accent-crimson);
+            color: #fff;
+        }
+        
+        /* Objects Visual - 3D Effect */
+        .objects-visual { 
+            display: flex; 
+            gap: 2rem; 
+            justify-content: center; 
+            align-items: center; 
+            margin: 3rem 0; 
+            flex-wrap: wrap; 
+            perspective: 1000px;
+        }
+        
+        .object-item { 
+            text-align: center; 
+            padding: 2.5rem; 
+            background: var(--glass); 
+            border-radius: 24px; 
+            min-width: 180px;
+            border: 1px solid var(--border-subtle);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            transform-style: preserve-3d;
+            opacity: 0;
+            transform: translateY(30px) rotateX(10deg);
+        }
+        
+        section.active .object-item {
+            opacity: 1;
+            transform: translateY(0) rotateX(0);
+        }
+        
+        section.active .object-item:nth-child(1) { transition-delay: 0.2s; }
+        section.active .object-item:nth-child(2) { transition-delay: 0.4s; }
+        section.active .object-item:nth-child(3) { transition-delay: 0.6s; }
+        
+        .object-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(251, 191, 36, 0.1) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        .object-item:hover::before {
+            opacity: 1;
+        }
+        
+        .object-item:hover {
+            transform: translateY(-15px) rotateX(5deg);
+            box-shadow: var(--shadow-glow-gold);
+            border-color: rgba(251, 191, 36, 0.3);
+        }
+        
+        .object-icon { 
+            font-size: 4rem; 
+            margin-bottom: 1.2rem;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
+            display: block;
+            transition: transform 0.4s ease;
+        }
+        
+        .object-item:hover .object-icon {
+            transform: scale(1.2) translateY(-5px);
+        }
+        
+        .object-label { 
+            font-weight: 600; 
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            font-family: 'Cormorant Garamond', serif;
+        }
+        
+        .object-label small {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            display: block;
+            margin-top: 0.4rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+        }
+        
+        /* Progress Navigation Dots */
+        .progress-dots {
+            position: fixed;
+            right: 2.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            z-index: 100;
+        }
+        
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-subtle);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .dot::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .dot:hover {
+            background: var(--accent-gold);
+            transform: scale(1.3);
+        }
+        
+        .dot.active {
+            background: var(--accent-gold);
+            box-shadow: 0 0 10px var(--accent-gold);
+        }
+        
+        .dot.active::before {
+            border-color: var(--accent-gold);
+        }
+        
+        /* Controls - Floating */
+        .controls { 
+            position: fixed; 
+            bottom: 2.5rem; 
+            right: 2.5rem; 
+            display: flex; 
+            gap: 1rem; 
+            z-index: 100; 
+        }
+        
+        .btn-nav { 
+            background: var(--glass); 
+            color: var(--text-primary); 
+            border: 1px solid var(--border-subtle); 
+            width: 56px; 
+            height: 56px; 
+            border-radius: 16px; 
+            cursor: pointer; 
+            font-size: 1.4rem; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            box-shadow: var(--shadow-soft);
+            backdrop-filter: blur(20px);
+        }
+        
+        .btn-nav:hover { 
+            background: var(--accent-gold); 
+            color: #000;
+            border-color: var(--accent-gold);
+            transform: scale(1.1) translateY(-2px);
+            box-shadow: var(--shadow-glow-gold);
+        }
+        
+        /* Progress Bar - Top */
+        .progress { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            height: 2px; 
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-emerald));
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
+            z-index: 1000;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+        }
+        
+        .slide-number { 
+            position: fixed; 
+            bottom: 2.5rem; 
+            left: 2.5rem; 
+            color: var(--text-muted); 
+            font-size: 0.9rem; 
+            z-index: 100;
+            font-weight: 500;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+        }
+        
+        .slide-number span {
+            color: var(--accent-gold);
+            font-weight: 600;
+        }
+        
+        /* Instructions - Minimal */
+        .instructions { 
+            position: fixed; 
+            top: 2.5rem; 
+            right: 2.5rem; 
+            background: var(--glass); 
+            padding: 1.2rem 1.8rem; 
+            border-radius: 16px; 
+            font-size: 0.8rem; 
+            color: var(--text-muted); 
+            z-index: 100; 
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--border-subtle);
+            backdrop-filter: blur(20px);
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+        
+        .instructions.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        kbd { 
+            background: rgba(255,255,255,0.1); 
+            padding: 0.2rem 0.6rem; 
+            border-radius: 6px; 
+            font-family: monospace; 
+            font-size: 0.85em;
+            border: 1px solid var(--border-subtle);
+            color: var(--accent-gold);
+        }
+        
+        /* Table - Dark Mode */
+        table { 
+            width: 100%; 
+            border-collapse: separate;
+            border-spacing: 0;
+            background: var(--glass); 
+            border-radius: 20px; 
+            overflow: hidden; 
+            box-shadow: var(--shadow-soft);
+            font-size: clamp(0.95rem, 1.2vw, 1.1rem);
+            border: 1px solid var(--border-subtle);
+            backdrop-filter: blur(10px);
+        }
+        
+        th { 
+            background: rgba(251, 191, 36, 0.1); 
+            color: var(--accent-gold); 
+            padding: 1.5rem; 
+            text-align: left; 
+            font-weight: 600; 
+            text-transform: uppercase; 
+            letter-spacing: 0.1em; 
+            font-size: 0.75rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        
+        td { 
+            padding: 1.5rem; 
+            border-bottom: 1px solid var(--border-subtle); 
+            color: var(--text-secondary); 
+            line-height: 1.7; 
+            transition: all 0.3s ease;
+        }
+        
+        tr:last-child td { 
+            border-bottom: none; 
+        }
+        
+        tr:hover td {
+            background: rgba(251, 191, 36, 0.05);
+            color: var(--text-primary);
+            padding-left: 2rem;
+        }
+        
+        .table-container { 
+            width: 100%; 
+            max-width: 1000px; 
+            overflow-x: auto; 
+            margin: 2rem 0;
+            border-radius: 20px;
+        }
+        
+        /* Special Elements */
+        .verse-highlight {
+            color: var(--accent-gold);
+            font-weight: 600;
+            text-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+        }
+        
+        .text-crimson { color: var(--accent-crimson); font-weight: 500; }
+        .text-emerald { color: var(--accent-emerald); font-weight: 500; }
+        .text-gold { color: var(--accent-gold); font-weight: 500; }
+        
+        /* Help Overlay */
+        .help-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 6, 23, 0.95);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(20px);
+        }
+        
+        .help-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .help-content {
+            text-align: center;
+            max-width: 600px;
+            padding: 3rem;
+        }
+        
+        .help-content h2 {
+            margin-bottom: 3rem;
+        }
+        
+        .help-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            text-align: left;
+        }
+        
+        .help-item {
+            background: var(--glass);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-subtle);
+        }
+        
+        .help-item kbd {
+            display: inline-block;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+        
+        /* Focus Mode */
+        .focus-mode .ambient-light,
+        .focus-mode .progress-dots,
+        .focus-mode .controls,
+        .focus-mode .slide-number,
+        .focus-mode .instructions {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .focus-mode section {
+            padding: 4rem 10rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) { 
+            section { padding: 2rem; } 
+            .two-col { grid-template-columns: 1fr; gap: 1.5rem; } 
+            .objects-visual { gap: 1rem; } 
+            .object-item { padding: 1.8rem; min-width: 140px; } 
+            th, td { padding: 1rem; } 
+            .instructions { display: none; }
+            .progress-dots { right: 1rem; }
+            .scripture-box::before { font-size: 6rem; }
+            .help-grid { grid-template-columns: 1fr; }
+        }
+        
+        @media print { 
+            section { 
+                position: relative; 
+                opacity: 1; 
+                visibility: visible; 
+                page-break-after: always; 
+                height: auto; 
+                min-height: 100vh;
+                background: white !important;
+                color: black !important;
+                filter: none !important;
+            } 
+            .controls, .progress, .slide-number, .instructions, 
+            .progress-dots, .ambient-light, #particle-canvas { 
+                display: none !important; 
+            }
+            .scripture-box, .highlight-box, .col, .discussion-q {
+                background: #f5f5f5 !important;
+                border: 1px solid #ddd !important;
+                color: black !important;
+            }
+            h1, h2, h3, p, li {
+                color: black !important;
+                -webkit-text-fill-color: black !important;
+            }
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-tertiary);
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-gold);
+        }
+        
+        ::selection { 
+            background-color: var(--accent-gold); 
+            color: #000; 
+        }
+        
+        /* Pulse Animation for Important Elements */
+        @keyframes pulse-gold {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.4); }
+            50% { box-shadow: 0 0 0 20px rgba(251, 191, 36, 0); }
+        }
+        
+        .pulse {
+            animation: pulse-gold 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Particle Canvas -->
+    <canvas id="particle-canvas"></canvas>
+    
+    <!-- Ambient Lights -->
+    <div class="ambient-light gold" id="light-gold"></div>
+    <div class="ambient-light crimson" id="light-crimson"></div>
+    <div class="ambient-light emerald" id="light-emerald"></div>
+    
+    <!-- Help Overlay -->
+    <div class="help-overlay" id="helpOverlay">
+        <div class="help-content">
+            <h2>Navigation Help</h2>
+            <div class="help-grid">
+                <div class="help-item">
+                    <kbd>→</kbd> <kbd>Space</kbd>
+                    <p>Next slide</p>
+                </div>
+                <div class="help-item">
+                    <kbd>←</kbd>
+                    <p>Previous slide</p>
+                </div>
+                <div class="help-item">
+                    <kbd>Home</kbd> <kbd>End</kbd>
+                    <p>First / Last slide</p>
+                </div>
+                <div class="help-item">
+                    <kbd>F</kbd>
+                    <p>Toggle focus mode</p>
+                </div>
+                <div class="help-item">
+                    <kbd>?</kbd> <kbd>H</kbd>
+                    <p>Toggle this help</p>
+                </div>
+                <div class="help-item">
+                    <kbd>1</kbd> - <kbd>9</kbd>
+                    <p>Jump to slide</p>
+                </div>
+            </div>
+            <p style="margin-top: 2rem; color: var(--text-muted);">Press any key to close</p>
+        </div>
+    </div>
+
+    <div class="reveal">
+        <div class="slides" id="slidesContainer">
+            
+            <!-- Slide 1: Title -->
+            <section class="active" data-theme="divine">
+                <span class="category-tag">Theology & Spiritual Warfare</span>
+                <h1>The Key, The Lock & The Thief</h1>
+                <p class="subtitle">Personal Accountability, Spiritual Warfare, and Covenant Restoration</p>
+                <div class="meta">
+                    <span class="author">GMT</span>
+                    <span style="color: var(--border-subtle)">|</span>
+                    <span>March 2025</span>
+                </div>
+            </section>
+
+            <!-- Slide 2: Opening Hook -->
+            <section data-theme="thief">
+                <h2 class="reveal-text">Opening Hook</h2>
+                <div class="objects-visual">
+                    <div class="object-item">
+                        <div class="object-icon">🔑</div>
+                        <div class="object-label">The Key<br><small>Opens</small></div>
+                    </div>
+                    <div class="object-item">
+                        <div class="object-icon">🔒</div>
+                        <div class="object-label">The Lock<br><small>Secures</small></div>
+                    </div>
+                    <div class="object-item">
+                        <div class="object-icon">⚠️</div>
+                        <div class="object-label">Trust<br><small>At Risk</small></div>
+                    </div>
+                </div>
+                <div class="discussion-q reveal-text delay-2" onclick="this.classList.toggle('active')">
+                    <span class="discussion-label">Ask</span>
+                    <p>"What comes to mind with these three? The key opens. The lock secures. But what happens when a <strong class="text-crimson">thief</strong> gets involved?"</p>
+                </div>
+                <p class="reveal-text delay-3" style="text-align: center; margin-top: 2rem; font-style: italic; color: var(--text-secondary);">
+                    Today we're not just talking about men and women. We're talking about <strong class="text-gold">instruments</strong>, a <strong class="text-crimson">thief who uses them</strong>, and how <strong class="text-emerald">God reclaims both</strong> for His kingdom.
+                </p>
+            </section>
+
+            <!-- Slide 3: The Key as Instrument -->
+            <section data-theme="thief">
+                <h2 class="reveal-text">Part One: The Instruments</h2>
+                <p class="reveal-text delay-1" style="text-align: center; margin-bottom: 2rem; font-style: italic; color: var(--text-secondary);">
+                    Put aside the guy and lady. Look at the objects themselves.
+                </p>
+                <div class="two-col">
+                    <div class="col reveal-text delay-2">
+                        <h3 style="color: var(--accent-gold);">🔑 The Key</h3>
+                        <p style="color: var(--text-primary); font-weight: 500;">Instrument of Access</p>
+                        <p>A key that opens multiple locks is not a master key—<strong class="text-crimson">it is a thief's tool.</strong></p>
+                        <p>It destroys security everywhere it goes. Leaves no visible mark on itself, but <strong>every lock it opens bears damage.</strong></p>
+                    </div>
+                    <div class="col reveal-text delay-3">
+                        <h3 style="color: var(--accent-emerald);">🔒 The Padlock</h3>
+                        <p style="color: var(--text-primary); font-weight: 500;">Instrument of Security</p>
+                        <p>Exists to preserve, protect, seal what is valuable.</p>
+                        <p>But if opened by unauthorized keys, it <strong class="text-crimson">fails its purpose.</strong> The owner discards it. Security is compromised.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 4: The Thief's Strategy -->
+            <section data-theme="thief">
+                <h2 class="reveal-text">The Thief's Strategy</h2>
+                <div class="highlight-box crimson reveal-text delay-1">
+                    <h3 style="color: var(--accent-crimson);">Here is what the thief does:</h3>
+                    <ol>
+                        <li><strong class="text-gold">He uses the key</strong> to break into many homes, destroying young lives through lust and false intimacy.</li>
+                        <li><strong class="text-gold">He compromises the lock, then sells it back</strong>—not for money, but for continued destruction.</li>
+                    </ol>
+                </div>
+                <div class="reveal-text delay-2" style="margin-top: 2rem; max-width: 850px;">
+                    <p style="color: var(--text-secondary);">• The lock, now damaged, believes her value is spent</p>
+                    <p style="color: var(--text-secondary);">• He whispers: <em style="color: var(--accent-crimson);">"Use what you have left. Your body is all you are now."</em></p>
+                    <p style="color: var(--text-secondary);">• She enters cycles of promiscuity, sometimes spreading <strong class="text-crimson">physical consequences</strong> (infection, disease)</p>
+                    <p style="color: var(--text-secondary);">• The thief has turned her from <strong class="text-gold">secured treasure</strong> to <strong class="text-crimson">instrument of further theft</strong></p>
+                </div>
+            </section>
+
+            <!-- Slide 5: Scripture - John 10:10 -->
+            <section data-theme="thief">
+                <div class="scripture-box crimson" style="text-align: center; border: 1px solid rgba(239, 68, 68, 0.3);">
+                    <p style="font-size: clamp(2rem, 4vw, 2.8rem); margin-bottom: 1rem;">"The thief does not come except to <strong class="text-crimson">steal</strong>, and to <strong class="text-crimson">kill</strong>, and to <strong class="text-crimson">destroy</strong>."</p>
+                    <cite style="color: var(--accent-crimson);">— John 10:10a</cite>
+                </div>
+            </section>
+
+            <!-- Slide 6: The Marriage Trap -->
+            <section data-theme="thief">
+                <h2 class="reveal-text">The Marriage Trap</h2>
+                <p class="reveal-text delay-1" style="text-align: center; margin-bottom: 2rem; color: var(--text-secondary);">
+                    Later, when man and woman come together—perhaps in marriage—the thief has prepared his <strong class="text-crimson">final blow</strong>:
+                </p>
+                
+                <div class="reveal-text delay-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 900px; width: 100%;">
+                    <div class="discussion-q" style="border-left-color: var(--accent-gold);" onclick="this.classList.toggle('active')">
+                        <span class="discussion-label gold">The Man (Former Key)</span>
+                        <p>Hides his past. God may have cleansed him, but he <strong class="text-crimson">conceals.</strong></p>
+                    </div>
+                    <div class="discussion-q" style="border-left-color: var(--accent-emerald);" onclick="this.classList.toggle('active')">
+                        <span class="discussion-label">The Woman (Former Lock)</span>
+                        <p>Cannot hide hers. <strong class="text-gold">Physical evidence</strong> marks her.</p>
+                    </div>
+                </div>
+                
+                <div class="highlight-box reveal-text delay-3" style="margin-top: 2rem; background: rgba(239, 68, 68, 0.05); border-color: rgba(239, 68, 68, 0.2);">
+                    <p style="text-align: center; font-size: 1.2rem; color: var(--text-primary);">
+                        The husband, forgetting his own forgiven destruction, <strong class="text-crimson">discriminates</strong> against his wife's visible past.
+                    </p>
+                    <p style="text-align: center; margin-top: 1rem; color: var(--text-secondary);">
+                        Trust fractures. Covenant weakens. <strong class="text-gold">The thief re-enters through the very door he created.</strong>
+                    </p>
+                </div>
+            </section>
+
+            <!-- Slide 7: Ephesians 6:12 -->
+            <section data-theme="hope">
+                <div class="scripture-box emerald" style="text-align: center; border: 1px solid rgba(52, 211, 153, 0.3);">
+                    <p style="font-size: clamp(1.4rem, 2.5vw, 1.8rem); margin-bottom: 1rem; font-style: italic;">
+                        "For we do not wrestle against flesh and blood, but against principalities, against powers, against the rulers of the darkness of this age, against spiritual hosts of wickedness in the heavenly places."
+                    </p>
+                    <cite style="color: var(--accent-emerald);">— Ephesians 6:12</cite>
+                </div>
+                <p class="reveal-text delay-1" style="text-align: center; margin-top: 2rem; font-size: 1.3rem; color: var(--text-primary);">
+                    <strong class="text-crimson">The thief is the enemy.</strong> The key and lock are <strong class="text-gold">redeemable instruments</strong> he misused.
+                </p>
+            </section>
+
+            <!-- Slide 8: Discussion Break 1 -->
+            <section data-theme="hope">
+                <h2 class="reveal-text" style="color: var(--accent-emerald);">Discussion Break #1</h2>
+                <p class="reveal-text delay-1" style="text-align: center; margin-bottom: 2rem; color: var(--text-secondary);">In pairs or small groups:</p>
+                
+                <div class="discussion-q reveal-text delay-2" onclick="this.classList.toggle('active')">
+                    <span class="discussion-label">Question 1</span>
+                    <p>How have you seen the <strong class="text-crimson">"thief's strategy"</strong> play out—using shame to drive people <em>deeper</em> into sin rather than toward healing?</p>
+                </div>
+                
+                <div class="discussion-q reveal-text delay-3" onclick="this.classList.toggle('active')">
+                    <span class="discussion-label">Question 2</span>
+                    <p>Why is it easier to blame the <strong class="text-gold">"key"</strong> or <strong class="text-emerald">"lock"</strong> than to recognize the spiritual battle behind their destruction?</p>
+                </div>
+            </section>
+
+            <!-- Continue with remaining slides... (Slides 9-28 follow same pattern) -->
+            
+            <!-- Slide 9: Personal Accountability -->
+            <section data-theme="divine">
+                <h2 class="reveal-text">Part Two: Personal Accountability</h2>
+                <p class="reveal-text delay-1" style="text-align: center; margin-bottom: 2rem; font-size: 1.2rem; color: var(--text-secondary);">
+                    The thief has strategy, but <strong class="text-gold">the key turned itself. The lock opened itself.</strong><br>We are not puppets.
+                </p>
+                
+                <div class="two-col">
+                    <div class="col reveal-text delay-2" style="border-left: 3px solid var(--accent-gold);">
+                        <h3 style="color: var(--accent-gold);">The Key (Man)</h3>
+                        <p style="color: var(--text-primary); font-weight: 500;">Tool of Destruction</p>
+                        <p>Power to open multiple locks. Active. Far-reaching.</p>
+                        <p>But damage <strong class="text-gold">hides in the pocket</strong>—scratches unseen, rust concealed.</p>
+                        <p style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-subtle); color: var(--accent-crimson); font-weight: 600;">
+                            Concealment is not innocence.<br>It is delayed exposure.
+                        </p>
+                    </div>
+                    <div class="col reveal-text delay-3" style="border-left: 3px solid var(--accent-emerald);">
+                        <h3 style="color: var(--accent-emerald);">The Lock (Woman)</h3>
+                        <p style="color: var(--text-primary); font-weight: 500;">Tool of Security</p>
+                        <p>Meant to preserve, protect, seal what is valuable.</p>
+                        <p>But if misused—damage is <strong class="text-emerald">visible.</strong></p>
+                        <p style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-subtle); color: var(--accent-emerald); font-weight: 600;">
+                            Visibility is not disqualification.<br>It is early exposure.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 10: 2 Samuel 11:27 -->
+            <section data-theme="divine">
+                <div class="scripture-box">
+                    <p>"But the thing that David had done <strong class="text-crimson">displeased the LORD.</strong>"</p>
+                    <cite>— 2 Samuel 11:27</cite>
+                </div>
+                <div class="reveal-text delay-1" style="max-width: 800px; margin-top: 2rem; text-align: center;">
+                    <p style="color: var(--text-secondary);">David hid his sin for months. Uriah dead. Bathsheba pregnant. Palace walls thick.</p>
+                    <p style="color: var(--text-primary); font-weight: 500; margin-top: 1rem;">But God sent Nathan.</p>
+                    <p style="color: var(--accent-gold); font-weight: 600; margin-top: 1rem; font-size: 1.2rem;">The key's hidden rust was seen by the One who forged metal.</p>
+                </div>
+            </section>
+
+            <!-- Slide 11: John 8 -->
+            <section data-theme="hope">
+                <div class="scripture-box emerald">
+                    <p>"Then the scribes and Pharisees brought to Him a woman caught in adultery... 'Teacher, this woman was caught in adultery, in the very act... what do You say?'</p>
+                    <p style="margin-top: 1rem;">Jesus raised Himself up and said to them, <strong class="text-gold">'He who is without sin among you, let him throw a stone at her first.'</strong>"</p>
+                    <p style="margin-top: 1rem;">...Jesus said to her, <strong class="text-emerald">'Neither do I condemn you; go and sin no more.'"</strong></p>
+                    <cite>— John 8:3-11</cite>
+                </div>
+                <div class="discussion-q reveal-text delay-1" style="margin-top: 2rem; max-width: 800px;" onclick="this.classList.toggle('active')">
+                    <span class="discussion-label crimson">Ask Your Group</span>
+                    <p>"Where was the man? Caught 'in the very act'—adultery requires two. But only the woman was dragged into public shame. <strong class="text-gold">The key hid. The lock was exposed.</strong>"</p>
+                </div>
+            </section>
+
+            <!-- Slide 12: Three Truths -->
+            <section data-theme="divine">
+                <h2 class="reveal-text">Part Three: Three Truths About Value</h2>
+                <div style="display: grid; gap: 1.5rem; max-width: 900px; width: 100%;">
+                    <div class="discussion-q reveal-text delay-1" style="border-left-width: 4px; border-left-color: var(--accent-gold);" onclick="this.classList.toggle('active')">
+                        <span class="discussion-label gold">Truth 1: The Reality</span>
+                        <p><strong class="text-gold">Society diminishes the lock, excuses the key.</strong> The key retains flexibility: provision, status, ability to hide. The lock's choices carry immediate relational visibility. <em style="color: var(--text-muted);">This is the world we live in.</em></p>
+                    </div>
+                    <div class="discussion-q reveal-text delay-2" style="border-left-width: 4px; border-left-color: var(--accent-crimson);" onclick="this.classList.toggle('active')">
+                        <span class="discussion-label crimson">Truth 2: The Rejection</span>
+                        <p><strong class="text-crimson">God does not play favorites with hiddenness.</strong> Before divine eyes, both stand at equal distance from holiness.</p>
+                    </div>
+                    <div class="discussion-q reveal-text delay-3" style="border-left-width: 4px; border-left-color: var(--accent-emerald);" onclick="this.classList.toggle('active')">
+                        <span class="discussion-label">Truth 3: The Restoration</span>
+                        <p><strong class="text-emerald">Do not call unclean what God has cleansed.</strong> The husband who discriminates is not discerning—<strong class="text-crimson">he is disobeying.</strong></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 13: Galatians 3:28 -->
+            <section data-theme="hope">
+                <div class="scripture-box emerald" style="text-align: center; border: 1px solid rgba(52, 211, 153, 0.3);">
+                    <p style="font-size: clamp(1.6rem, 3vw, 2rem);">
+                        "There is neither Jew nor Greek, there is neither slave nor free, <strong class="text-emerald">there is neither male nor female;</strong> for you are all one in Christ Jesus."
+                    </p>
+                    <cite style="color: var(--accent-emerald);">— Galatians 3:28</cite>
+                </div>
+                <p class="reveal-text delay-1" style="text-align: center; margin-top: 2rem; font-size: 1.2rem; color: var(--text-primary);">
+                    In Christ, the key stops being "experienced" and the lock stops being "diminished."<br><strong class="text-gold">Both become new creation.</strong>
+                </p>
+            </section>
+
+            <!-- Slide 14: Acts 10:15 -->
+            <section data-theme="divine">
+                <div class="scripture-box" style="text-align: center; border: 1px solid rgba(251, 191, 36, 0.3);">
+                    <p style="font-size: clamp(1.8rem, 3.5vw, 2.2rem);">
+                        "What God has cleansed <strong class="text-gold">you must not call common.</strong>"
+                    </p>
+                    <cite>— Acts 10:15</cite>
+                </div>
+                <div class="highlight-box gold reveal-text delay-1" style="margin-top: 2rem; max-width: 800px;">
+                    <p style="text-align: center; font-size: 1.2rem; color: var(--text-primary);">
+                        Peter learned this with Gentiles.<br><strong class="text-gold">We must learn it with spouses.</strong>
+                    </p>
+                    <p style="text-align: center; margin-top: 1rem; color: var(--text-secondary);">
+                        Both need the same miracle: <strong class="text-emerald">believing God creates clean slate where humans see only smudges.</strong>
+                    </p>
+                </div>
+            </section>
+
+            <!-- Slide 15: Discussion Break 2 -->
+            <section data-theme="hope">
+                <h2 class="reveal-text" style="color: var(--accent-emerald);">Discussion Break #2</h2>
+                
+                <div class="discussion-q reveal-text delay-1" onclick="this.classList.toggle('active')">
+                    <span class="discussion-label">Question 3</span>
+                    <p>Read John 8 again. Why did the accusers leave <strong class="text-gold">"beginning with the oldest"?</strong> What did they recognize?</p>
+                </div>
+                
+                <div class="discussion-q reveal-text delay-2" onclick="this.classList.toggle('active')">
+                    <span class="discussion-label">Question 4</span>
+                    <p>Have you seen someone accept God's cleansing while others still saw their past? <strong class="text-emerald">What made the difference?</strong></p>
+                </div>
+            </section>
+
+            <!-- Slide 16: Prevention -->
+            <section data-theme="divine">
+                <h2 class="reveal-text">Part Four: Prevention & Restoration</h2>
+                <div class="highlight-box emerald reveal-text delay-1">
+                    <h3 style="color: var(--accent-emerald);">Prevention is Better</h3>
+                    <p style="color: var(--text-secondary);">Every unauthorized opening creates <strong class="text-gold">"one flesh" bonds</strong> that should not exist.</p>
+                    <p style="margin-top: 1rem; color: var(--text-secondary);">
+                        The key scatters pieces of himself across many locks.<br>
+                        The lock receives pieces of many keys.<br>
+                        <strong class="text-crimson">Both become fragmented.</strong>
+                    </p>
+                </div>
+                <div class="scripture-box reveal-text delay-2" style="margin-top: 2rem;">
+                    <p>"Or do you not know that he who is joined to a harlot is <strong class="text-crimson">one body</strong> with her? For 'the two,' He says, 'shall become one flesh.'"</p>
+                    <cite>— 1 Corinthians 6:16</cite>
+                </div>
+            </section>
+
+            <!-- Slide 17: 1 Corinthians 6:18-20 -->
+            <section data-theme="divine">
+                <div class="scripture-box">
+                    <p>"<strong class="text-crimson">Flee sexual immorality.</strong> Every sin that a man does is outside the body, but he who commits sexual immorality sins against his own body. Or do you not know that your body is <strong class="text-gold">the temple of the Holy Spirit</strong> who is in you, whom you have from God, and you are not your own? For you were <strong class="text-emerald">bought at a price;</strong> therefore glorify God in your body and in your spirit, which are God's."</p>
+                    <cite>— 1 Corinthians 6:18-20</cite>
+                </div>
+            </section>
+
+            <!-- Slide 18: If You Have Sinned -->
+            <section data-theme="thief">
+                <h2 class="reveal-text">But If You Have Sinned</h2>
+                <p class="reveal-text delay-1" style="text-align: center; font-size: 1.2rem; margin-bottom: 2rem; color: var(--text-secondary);">
+                    If the thief has already used you—<strong class="text-gold">key or lock</strong>—the battle is not over.<br>It has just begun.
+                </p>
+                
+                <div class="reveal-text delay-2" style="display: grid; gap: 1rem; max-width: 800px; width: 100%;">
+                    <p style="color: var(--text-secondary);">• The devil wants your <strong class="text-crimson">marriage</strong></p>
+                    <p style="color: var(--text-secondary);">• He wants your <strong class="text-crimson">trust destroyed</strong></p>
+                    <p style="color: var(--text-secondary);">• He wants the husband to <strong class="text-crimson">discriminate</strong> and the wife to <strong class="text-crimson">despair</strong></p>
+                </div>
+                
+                <div class="highlight-box crimson reveal-text delay-3" style="margin-top: 2rem;">
+                    <p style="text-align: center; font-size: 1.3rem; font-weight: 600; color: var(--text-primary);">
+                        He wins when you believe cleansing is <strong>partial.</strong>
+                    </p>
+                </div>
+            </section>
+
+            <!-- Slide 19: Proverbs 28:13 -->
+            <section data-theme="hope">
+                <div class="scripture-box" style="text-align: center; border: 1px solid rgba(251, 191, 36, 0.3);">
+                    <p style="font-size: clamp(1.5rem, 3vw, 2rem);">
+                        "Whoever conceals his transgressions will not prosper, <strong class="text-gold">but he who confesses and forsakes them will obtain mercy.</strong>"
+                    </p>
+                    <cite>— Proverbs 28:13</cite>
+                </div>
+                
+                <div class="highlight-box gold reveal-text delay-1" style="margin-top: 2rem; max-width: 900px;">
+                    <h3 style="text-align: center; margin-bottom: 1.5rem; color: var(--text-primary);">The Equation</h3>
+                    <div style="display: grid; gap: 1rem; text-align: center;">
+                        <p style="color: var(--text-secondary);">Hidden sin + time <strong style="color: var(--accent-crimson);">≠</strong> Lesser sin</p>
+                        <p style="color: var(--text-secondary);">Visible sin + shame <strong style="color: var(--accent-crimson);">≠</strong> Unforgivable sin</p>
+                        <p style="font-size: 1.3rem; font-weight: 600; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(251, 191, 36, 0.2); color: var(--text-primary);">
+                            Repentance + blood = <strong class="text-emerald">Clean key. Clean lock. New creation.</strong>
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 20: Defeating the Devil -->
+            <section data-theme="hope">
+                <h2 class="reveal-text">Defeating the Devil</h2>
+                <p class="reveal-text delay-1" style="text-align: center; margin-bottom: 2rem; color: var(--text-secondary);">
+                    Trust issues will arise. This is <strong class="text-gold">flesh.</strong><br>But we do not fight flesh and blood.
+                </p>
+                
+                <div style="display: grid; gap: 1.5rem; max-width: 900px; width: 100%;">
+                    <div class="discussion-q reveal-text delay-2" style="border-left-color: var(--accent-gold);" onclick="this.classList.toggle('active')">
+                        <span class="discussion-label gold">1. Confession</span>
+                        <p>Bring hidden things to light with <strong class="text-gold">God and spouse</strong></p>
+                    </div>
+                    <div class="discussion-q reveal-text delay-3" style="border-left-color: var(--accent-emerald);" onclick="this.classList.toggle('active')">
+                        <span class="discussion-label">2. Cleansing</span>
+                        <p>Receive Acts 10:15—<strong class="text-emerald">do not call unclean what God has cleansed</strong></p>
+                    </div>
+                    <div class="discussion-q reveal-text delay-4" style="border-left-color: var(--accent-crimson);" onclick="this.classList.toggle('active')">
+                        <span class="discussion-label crimson">3. Covenant</span>
+                        <p>Build new trust on <strong class="text-gold">new creation</strong>, not memory of old destruction</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 21: Discussion Break 3 -->
+            <section data-theme="hope">
+                <h2 class="reveal-text" style="color: var(--accent-emerald);">Discussion Break #3</h2>
+                
+                <div class="discussion-q reveal-text delay-1" onclick="this.classList.toggle('active')">
+                    <span class="discussion-label">Question 5</span>
+                    <p>How does understanding <strong class="text-gold">"one flesh"</strong> change how you view past sexual experiences—not just as "mistakes" but as <strong class="text-crimson">bonds that need breaking?</strong></p>
+                </div>
+                
+                <div class="discussion-q reveal-text delay-2" onclick="this.classList.toggle('active')">
+                    <span class="discussion-label">Question 6</span>
+                    <p>For married couples: What would it mean to truly believe your spouse is <strong class="text-emerald">cleansed, not tolerated?</strong> How do you fight the devil's whispers of distrust?</p>
+                </div>
+            </section>
+
+            <!-- Slide 22: Four Commands -->
+            <section data-theme="divine">
+                <h2 class="reveal-text">Part Five: Four Commands</h2>
+                <div style="display: grid; gap: 1.5rem; max-width: 1000px; width: 100%;">
+                    <div class="two-col reveal-text delay-1" style="gap: 1.5rem;">
+                        <div class="col" style="background: linear-gradient(135deg, rgba(251, 191, 36, 0.08) 0%, transparent 100%); border-left: 3px solid var(--accent-gold);">
+                            <h3 style="color: var(--accent-gold);">To the Key (Men)</h3>
+                            <p style="color: var(--text-secondary);">Your hiddenness is not innocence—it is <strong class="text-crimson">delayed exposure.</strong> Repent while mercy waits. Never discriminate against the cleansed lock while hiding your own rust.</p>
+                        </div>
+                        <div class="col" style="background: linear-gradient(135deg, rgba(52, 211, 153, 0.08) 0%, transparent 100%); border-left: 3px solid var(--accent-emerald);">
+                            <h3 style="color: var(--accent-emerald);">To the Lock (Women)</h3>
+                            <p style="color: var(--text-secondary);">Your visibility is not disqualification—it is <strong class="text-emerald">early exposure.</strong> The same blood that cleanses hidden sin cleanses seen sin. Receive it fully.</p>
+                        </div>
+                    </div>
+                    <div class="two-col reveal-text delay-2" style="gap: 1.5rem;">
+                        <div class="col" style="background: linear-gradient(135deg, rgba(96, 165, 250, 0.08) 0%, transparent 100%); border-left: 3px solid var(--accent-sapphire);">
+                            <h3 style="color: var(--accent-sapphire);">To the Church</h3>
+                            <p style="color: var(--text-secondary);">Judge not by what eyes can track. Extend to both the same invitation: <strong class="text-gold">confess, be washed, be whole.</strong></p>
+                        </div>
+                        <div class="col" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, transparent 100%); border-left: 3px solid var(--accent-crimson);">
+                            <h3 style="color: var(--accent-crimson);">To Both</h3>
+                            <p style="color: var(--text-secondary);">Fight the devil together. Do not let him re-enter through unforgiveness.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 23: John 10:10b -->
+            <section data-theme="hope">
+                <div class="scripture-box emerald" style="text-align: center; border: 1px solid rgba(52, 211, 153, 0.3);">
+                    <p style="font-size: clamp(1.8rem, 3.5vw, 2.4rem);">
+                        "I have come that they may have <strong class="text-emerald">life,</strong> and that they may have it <strong class="text-emerald">more abundantly.</strong>"
+                    </p>
+                    <cite style="color: var(--accent-emerald);">— John 10:10b</cite>
+                </div>
+                <div class="highlight-box emerald reveal-text delay-1" style="margin-top: 2rem; max-width: 800px;">
+                    <p style="text-align: center; font-size: 1.2rem; color: var(--text-primary);">
+                        The thief came to <strong class="text-crimson">steal, kill, destroy.</strong><br>
+                        Jesus came for <strong class="text-emerald">abundant life.</strong>
+                    </p>
+                </div>
+            </section>
+
+            <!-- Slide 24: Your Choice Today -->
+            <section data-theme="divine">
+                <h2 class="reveal-text">Your Choice Today</h2>
+                <div style="display: grid; gap: 1.5rem; max-width: 900px; width: 100%;">
+                    <div class="discussion-q reveal-text delay-1" style="border-left-width: 4px; border-left-color: var(--accent-emerald);" onclick="this.classList.toggle('active')">
+                        <span class="discussion-label">Prevention</span>
+                        <p><strong class="text-emerald">Flee immorality.</strong> Keep the key for one lock, the lock for one key, in covenant.</p>
+                    </div>
+                    <div class="discussion-q reveal-text delay-2" style="border-left-width: 4px; border-left-color: var(--accent-gold);" onclick="this.classList.toggle('active')">
+                        <span class="discussion-label gold">Restoration</span>
+                        <p>If the thief has used you, <strong class="text-gold">confess, be cleansed,</strong> enter marriage without discrimination or despair.</p>
+                    </div>
+                    <div class="discussion-q reveal-text delay-3" style="border-left-width: 4px; border-left-color: var(--accent-crimson);" onclick="this.classList.toggle('active')">
+                        <span class="discussion-label crimson">Covenant Protection</span>
+                        <p>In marriage, <strong class="text-crimson">fight the devil together.</strong> Do not let him re-enter through unforgiveness.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 25: Closing Prayer -->
+            <section data-theme="divine">
+                <h2 class="reveal-text" style="color: var(--accent-emerald);">Closing Prayer & Commitment</h2>
+                <p class="reveal-text delay-1" style="text-align: center; margin-bottom: 2rem; font-size: 1.1rem; color: var(--text-secondary);">Invite response:</p>
+                
+                <div style="display: grid; gap: 1.5rem; max-width: 900px; width: 100%;">
+                    <div class="col reveal-text delay-2" style="background: linear-gradient(135deg, rgba(52, 211, 153, 0.1) 0%, transparent 100%); border-left: 3px solid var(--accent-emerald);">
+                        <h3 style="color: var(--accent-emerald); margin-top: 0;">For the Unmarried</h3>
+                        <p style="color: var(--text-secondary);">Will you choose <strong class="text-emerald">prevention?</strong> Will you keep your key or lock for covenant, knowing the thief waits to use you?</p>
+                    </div>
+                    <div class="col reveal-text delay-3" style="background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, transparent 100%); border-left: 3px solid var(--accent-gold);">
+                        <h3 style="color: var(--accent-gold); margin-top: 0;">For Those with Past</h3>
+                        <p style="color: var(--text-secondary);">Will you <strong class="text-gold">confess, receive cleansing,</strong> and never again let the thief use your shame to drive you to destruction?</p>
+                    </div>
+                    <div class="col reveal-text delay-4" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, transparent 100%); border-left: 3px solid var(--accent-crimson);">
+                        <h3 style="color: var(--accent-crimson); margin-top: 0;">For the Married</h3>
+                        <p style="color: var(--text-secondary);">Will you stop discriminating? Will you call <strong class="text-gold">"cleansed"</strong> what God has called <strong class="text-gold">"cleansed?"</strong> Will you fight the devil's whispers together?</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 26: Prayer Points -->
+            <section data-theme="divine">
+                <h2 class="reveal-text" style="color: var(--accent-gold);">Pray For</h2>
+                <div class="highlight-box gold reveal-text delay-1" style="max-width: 700px; text-align: center;">
+                    <p style="font-size: 1.4rem; margin-bottom: 1.5rem; color: var(--text-primary);">🙏 <strong class="text-gold">Courage</strong> to confess</p>
+                    <p style="font-size: 1.4rem; margin-bottom: 1.5rem; color: var(--text-primary);">🙏 <strong class="text-emerald">Grace</strong> to receive cleansing</p>
+                    <p style="font-size: 1.4rem; margin-bottom: 1.5rem; color: var(--text-primary);">🙏 <strong class="text-crimson">Strength</strong> to "sin no more"</p>
+                    <p style="font-size: 1.4rem; color: var(--text-primary);">🙏 <strong class="text-gold">Protection</strong> for covenant marriage</p>
+                </div>
+            </section>
+
+            <!-- Slide 27: Leader Notes -->
+            <section data-theme="divine">
+                <h2 class="reveal-text" style="font-size: 1.8rem; color: var(--text-secondary);">Leader Notes</h2>
+                <div class="reveal-text delay-1" style="max-width: 900px; text-align: left; font-size: 0.95rem; color: var(--text-secondary);">
+                    <p style="margin-bottom: 1.5rem; padding: 1.5rem; background: var(--glass); border-radius: 12px; border-left: 3px solid var(--accent-gold);">
+                        <strong style="color: var(--accent-gold);">The "Thief Selling Back" Metaphor:</strong> Ensure your audience tracks this: The devil doesn't just destroy once. He compromises the lock, then deceives her into further promiscuity (emotional coping, sexual acting out, potential disease), so that when she enters marriage, she carries visible consequences that become tools for marital distrust. The husband's discrimination is the devil's final victory—re-entering the home he already stole from.
+                    </p>
+                    
+                    <p style="margin-bottom: 1.5rem; padding: 1.5rem; background: var(--glass); border-radius: 12px; border-left: 3px solid var(--accent-crimson);">
+                        <strong style="color: var(--accent-crimson);">Health Consequences:</strong> Mentioned both explicitly ("infection, disease") and implicitly ("physical consequences"). This is real. The thief destroys health, trust, and covenant simultaneously.
+                    </p>
+                    
+                    <p style="margin-bottom: 1.5rem; padding: 1.5rem; background: var(--glass); border-radius: 12px; border-left: 3px solid var(--accent-emerald);">
+                        <strong style="color: var(--accent-emerald);">The "Neither Do I Condemn You" Balance:</strong> Emphasize that Jesus said both things: No condemnation AND "sin no more." Grace is not permission. Cleansing is for transformation.
+                    </p>
+                    
+                    <p style="padding: 1.5rem; background: var(--glass); border-radius: 12px; border-left: 3px solid var(--accent-sapphire);">
+                        <strong style="color: var(--accent-sapphire);">For Husbands Specifically:</strong> The line "Who were you to discriminate when God does not?" is strong medicine. Deliver it with the recognition that trust issues are real—but they are flesh, not Spirit. The supernatural life requires supernatural forgiveness.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Slide 28: Scripture Index -->
+            <section data-theme="divine">
+                <h2 class="reveal-text" style="font-size: 1.8rem; color: var(--text-secondary);">Scripture Index</h2>
+                <div class="reveal-text delay-1" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; max-width: 900px; text-align: left; font-size: 0.9rem;">
+                    <div class="discussion-q" style="padding: 1.2rem;">
+                        <p style="color: var(--text-secondary);"><strong style="color: var(--accent-crimson);">John 10:10</strong> — Thief's purpose vs. Jesus' purpose</p>
+                    </div>
+                    <div class="discussion-q" style="padding: 1.2rem;">
+                        <p style="color: var(--text-secondary);"><strong style="color: var(--accent-emerald);">Ephesians 6:12</strong> — Spiritual warfare, not flesh and blood</p>
+                    </div>
+                    <div class="discussion-q" style="padding: 1.2rem;">
+                        <p style="color: var(--text-secondary);"><strong style="color: var(--accent-gold);">2 Samuel 11:27</strong> — Delayed exposure of hidden sin</p>
+                    </div>
+                    <div class="discussion-q" style="padding: 1.2rem;">
+                        <p style="color: var(--text-secondary);"><strong style="color: var(--accent-gold);">John 8:3-11</strong> — Unequal exposure, equal grace</p>
+                    </div>
+                    <div class="discussion-q" style="padding: 1.2rem;">
+                        <p style="color: var(--text-secondary);"><strong style="color: var(--accent-gold);">Acts 10:15</strong> — Do not call unclean what God cleansed</p>
+                    </div>
+                    <div class="discussion-q" style="padding: 1.2rem;">
+                        <p style="color: var(--text-secondary);"><strong style="color: var(--accent-emerald);">Galatians 3:28</strong> — Neither male nor female in Christ</p>
+                    </div>
+                    <div class="discussion-q" style="padding: 1.2rem;">
+                        <p style="color: var(--text-secondary);"><strong style="color: var(--accent-gold);">1 Corinthians 6:16-20</strong> — One flesh, temple of Spirit</p>
+                    </div>
+                    <div class="discussion-q" style="padding: 1.2rem;">
+                        <p style="color: var(--text-secondary);"><strong style="color: var(--accent-gold);">Proverbs 28:13</strong> — Confession and mercy</p>
+                    </div>
+                </div>
+                <p class="reveal-text delay-2" style="margin-top: 2rem; text-align: center; color: var(--text-muted);">
+                    <strong style="color: var(--accent-gold);">GMT</strong> | © 2025 | Built with truth and grace
+                </p>
+            </section>
+
+        </div>
+
+        <!-- Progress Dots -->
+        <div class="progress-dots" id="progressDots"></div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <button class="btn-nav" onclick="prevSlide()" title="Previous">←</button>
+            <button class="btn-nav" onclick="nextSlide()" title="Next">→</button>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress" id="progress"></div>
+        
+        <!-- Slide Counter -->
+        <div class="slide-number" id="slideNumber">
+            <span>1</span> / 28
+        </div>
+        
+        <!-- Instructions -->
+        <div class="instructions" id="instructions">
+            <strong style="color: var(--text-primary);">Navigate</strong><br>
+            <kbd>→</kbd> <kbd>←</kbd> or <kbd>Space</kbd><br>
+            <kbd>?</kbd> for help
+        </div>
+    </div>
+
+    <script>
+        // Particle System
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let animationId;
+        
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.speedY = (Math.random() - 0.5) * 0.5;
+                this.opacity = Math.random() * 0.5 + 0.1;
+                this.life = Math.random() * 100 + 100;
+            }
+            
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.life--;
+                
+                if (this.life <= 0 || this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+                    this.reset();
+                }
+            }
+            
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(251, 191, 36, ${this.opacity})`;
+                ctx.fill();
+            }
+        }
+        
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < 50; i++) {
+                particles.push(new Particle());
+            }
+        }
+        
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            animationId = requestAnimationFrame(animateParticles);
+        }
+        
+        resizeCanvas();
+        initParticles();
+        animateParticles();
+        
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            initParticles();
+        });
+        
+        // Slide Management
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('section');
+        const totalSlides = slides.length;
+        const slidesContainer = document.getElementById('slidesContainer');
+        const progressBar = document.getElementById('progress');
+        const slideNumber = document.getElementById('slideNumber');
+        const progressDots = document.getElementById('progressDots');
+        const instructions = document.getElementById('instructions');
+        const helpOverlay = document.getElementById('helpOverlay');
+        let focusMode = false;
+        
+        // Create progress dots
+        slides.forEach((_, index) => {
+            const dot = document.createElement('div');
+            dot.className = 'dot';
+            if (index === 0) dot.classList.add('active');
+            dot.onclick = () => goToSlide(index);
+            progressDots.appendChild(dot);
+        });
+        
+        const dots = document.querySelectorAll('.dot');
+        
+        function updateTheme() {
+            const theme = slides[currentSlide].dataset.theme;
+            slidesContainer.className = 'slides';
+            if (theme) {
+                slidesContainer.classList.add(`theme-${theme}`);
+            }
+            
+            // Update ambient lights
+            document.querySelectorAll('.ambient-light').forEach(light => {
+                light.style.opacity = '0.1';
+            });
+            
+            if (theme === 'thief') {
+                document.getElementById('light-crimson').style.opacity = '0.25';
+            } else if (theme === 'hope') {
+                document.getElementById('light-emerald').style.opacity = '0.25';
+            } else {
+                document.getElementById('light-gold').style.opacity = '0.25';
+            }
+        }
+        
+        function updateSlide() {
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active');
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                }
+            });
+            
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+            
+            progressBar.style.width = ((currentSlide + 1) / totalSlides) * 100 + '%';
+            slideNumber.innerHTML = `<span>${currentSlide + 1}</span> / ${totalSlides}`;
+            
+            updateTheme();
+        }
+        
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlide();
+            }
+        }
+        
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlide();
+            }
+        }
+        
+        function goToSlide(index) {
+            if (index >= 0 && index < totalSlides) {
+                currentSlide = index;
+                updateSlide();
+            }
+        }
+        
+        function toggleFocusMode() {
+            focusMode = !focusMode;
+            document.body.classList.toggle('focus-mode', focusMode);
+        }
+        
+        function toggleHelp() {
+            helpOverlay.classList.toggle('active');
+        }
+        
+        // Keyboard Navigation
+        document.addEventListener('keydown', (e) => {
+            if (helpOverlay.classList.contains('active')) {
+                toggleHelp();
+                return;
+            }
+            
+            switch(e.key) {
+                case 'ArrowRight':
+                case ' ':
+                case 'PageDown':
+                    e.preventDefault();
+                    nextSlide();
+                    break;
+                case 'ArrowLeft':
+                case 'PageUp':
+                    e.preventDefault();
+                    prevSlide();
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    goToSlide(0);
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    goToSlide(totalSlides - 1);
+                    break;
+                case 'f':
+                case 'F':
+                    toggleFocusMode();
+                    break;
+                case '?':
+                case 'h':
+                case 'H':
+                    toggleHelp();
+                    break;
+                default:
+                    if (e.key >= '1' && e.key <= '9') {
+                        const num = parseInt(e.key) - 1;
+                        if (num < totalSlides) goToSlide(num);
+                    }
+            }
+        });
+        
+        // Touch Navigation
+        let touchStartX = 0;
+        let touchStartY = 0;
+        
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+        });
+        
+        document.addEventListener('touchend', (e) => {
+            const touchEndX = e.changedTouches[0].screenX;
+            const touchEndY = e.changedTouches[0].screenY;
+            const diffX = touchStartX - touchEndX;
+            const diffY = touchStartY - touchEndY;
+            
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+                diffX > 0 ? nextSlide() : prevSlide();
+            }
+        });
+        
+        // Show instructions briefly on load
+        setTimeout(() => {
+            instructions.classList.add('visible');
+        }, 1000);
+        
+        setTimeout(() => {
+            instructions.classList.remove('visible');
+        }, 6000);
+        
+        // Initialize
+        updateSlide();
+    </script>
+</body>
+</html>
